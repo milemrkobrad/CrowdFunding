@@ -1,8 +1,21 @@
+import React, { Component } from "react"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { Menu, Container } from 'semantic-ui-react'
 import './App.css'
+import { Campaign } from './components/Campaign'
+import { Home } from './components/Home'
+import { NotFound } from './components/NotFound'
+import history from './history'
 
 class App extends Component{
   render(){
     return(
+      // <h1>hello</h1>
       <Router history={history}>
         <Container>
           <Menu secondary>
@@ -18,12 +31,12 @@ class App extends Component{
           </Switch>
         </Container>
       </Router>
-    )
+    );
   }
   
-  navigateToHome(){
+  navigateToHome(e){
     e.preventDefault();
-    history.pushState('/');
+    history.push('/');
   }
 }
 

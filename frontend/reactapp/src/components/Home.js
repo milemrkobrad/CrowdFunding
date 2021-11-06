@@ -5,7 +5,7 @@ import {withRouter} from 'react-router'
 export class Home extends Component{
 
     state = {
-        address = ''
+        address : ''
     }
 
     constructor(props){
@@ -20,7 +20,7 @@ export class Home extends Component{
             <div>
                 <Header as='h1'>Crowdfunding application</Header>
 
-                <From>
+                <Form>
                     <Form.Input
                         label='Contract Address'
                         type='text'
@@ -33,7 +33,7 @@ export class Home extends Component{
                     >
                         Submit
                     </Button>
-                </From>
+                </Form>
             </div>
         )
     }
