@@ -28,11 +28,13 @@ export class Campaign extends Component{
         this.onContribute = this.onContribute.bind(this);
     }
 
-    async componentDidMount(){
+    async componentDidMount(){        
+        //console.log(this.getCampaignAddress());
         const currentCampaign = await this.getCampaign(this.getCampaignAddress());
-        this.setState({
-            campaign: currentCampaign
-        });
+        // console.log('currenCampaign: ' + currentCampaign);
+        // this.setState({
+        //     campaign: currentCampaign
+        // });
     }
 
     getCampaignAddress(){
@@ -41,7 +43,9 @@ export class Campaign extends Component{
 
     async getCampaign(address){
         const contract = await createContract(address);
-
+        const name = await contract.method.name().call().then(console);
+        /*
+        console.log('acc: ' + contract.defaultHardfork);
         const name = await contract.method.name().call();
         const targetAmount = await contract.method.targetAmount().call();
         const totalCollected = await contract.method.totalCollected().call();
@@ -63,13 +67,13 @@ export class Campaign extends Component{
             deadline: deadlineDate,
             isBeneficiary: beneficiary.toLowerCase() === accounts[0].toLowerCase(),
             state: state
-        }
+        }*/
     }
 
     render(){
         return(
             <div>
-                <Table celled padded color="teal" striped>
+                {/* <Table celled padded color="teal" striped>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -141,7 +145,7 @@ export class Campaign extends Component{
                             </Table.Cell>
                         </Table.Row>
                     </Table.Body>
-                </Table>
+                </Table> */}
 
             </div>
         )
