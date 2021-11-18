@@ -3,9 +3,9 @@ var CrowdFundingWithDeadline = artifacts.require("./CrowdFundingWithDeadline.sol
 module.exports = function(deployer){
     deployer.deploy(
         CrowdFundingWithDeadline,
-        "Test campaign",
+        "Test campaign 1",
         1,
         200,
-        "0x3158479784743cCE595E86357aB6563d437F77E3"
+        "0x1e48f20f1F86DB68144BaeCbad280BF284485315"
     )
 }

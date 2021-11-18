@@ -37,6 +37,7 @@ class App extends Component{
   navigateToHome(e){
     e.preventDefault();
     history.push('/');
+    window.location.reload();
   }
 }
 

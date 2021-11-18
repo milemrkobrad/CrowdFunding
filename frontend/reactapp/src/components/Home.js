@@ -12,7 +12,7 @@ export class Home extends Component{
         super(props);
 
         this.onChange = this.onChange.bind(this);
-        this.osSubmit = this.onSubmit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     render(){
@@ -24,7 +24,7 @@ export class Home extends Component{
                     <Form.Input
                         label='Contract Address'
                         type='text'
-                        value={this.state.address}
+                        value={this.state.address}                        
                         onChange={this.onChange}
                     />
                     <Button

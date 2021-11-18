@@ -28,13 +28,12 @@ export class Campaign extends Component{
         this.onContribute = this.onContribute.bind(this);
     }
 
-    async componentDidMount(){        
-        //console.log(this.getCampaignAddress());
+    async componentDidMount(){               
         const currentCampaign = await this.getCampaign(this.getCampaignAddress());
         // console.log('currenCampaign: ' + currentCampaign);
-        // this.setState({
-        //     campaign: currentCampaign
-        // });
+        this.setState({
+            campaign: currentCampaign
+        });
     }
 
     getCampaignAddress(){
@@ -42,38 +41,39 @@ export class Campaign extends Component{
     }
 
     async getCampaign(address){
-        const contract = await createContract(address);
-        const name = await contract.method.name().call().then(console);
-        /*
-        console.log('acc: ' + contract.defaultHardfork);
-        const name = await contract.method.name().call();
-        const targetAmount = await contract.method.targetAmount().call();
-        const totalCollected = await contract.method.totalCollected().call();
-        const beforeDeadline = await contract.method.beforeDeadline().call();
-        const beneficiary = await contract.method.beneficiary().call();
-        const deadlineSeconds = await contract.method.fundingDeadline().call();
-        const state = await contract.method.state().call();
+        const contract = await createContract(address);        
 
+        const name = await contract.methods.name().call();        
+        const targetAmount = await contract.methods.targetAmount().call();
+        const totalCollected = await contract.methods.totalCollected().call();
+        const beforeDeadline = await contract.methods.beforeDeadline;
+        const beneficiary = await contract.methods.beneficiary().call();
+        const deadlineSeconds = await contract.methods.fundingDeadline().call();
+        const state = await contract.methods.state().call();
 
         var deadlineDate = new Date(0);
+        
         deadlineDate.setUTCSeconds(deadlineSeconds);
 
+        //const accounts = await web3.eth.getAccounts().then();
+        
         const accounts = await web3.eth.getAccounts();
+        //console.log("acc: "+ await accounts[0])
         return {
             name: name,
             targetAmount: targetAmount,
             totalCollected: totalCollected,
-            campaignFinished: !beforeDeadline,
+            campaignFinished: beforeDeadline,
             deadline: deadlineDate,
             isBeneficiary: beneficiary.toLowerCase() === accounts[0].toLowerCase(),
             state: state
-        }*/
+        }
     }
 
     render(){
         return(
             <div>
-                {/* <Table celled padded color="teal" striped>
+                 <Table celled padded color="teal" striped>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Name</Table.HeaderCell>
@@ -87,7 +87,7 @@ export class Campaign extends Component{
                                 Name
                             </Table.Cell>
                             <Table.Cell singleLine>
-                                {this.state.campaign.name}
+                                 {this.state.campaign.name} 
                             </Table.Cell>
                         </Table.Row>
 
@@ -123,7 +123,7 @@ export class Campaign extends Component{
                                 Deadline
                             </Table.Cell>
                             <Table.Cell singleLine>
-                                {this.state.campaign.deadline}
+                                {new Date(this.state.campaign.deadline).toString()} 
                             </Table.Cell>
                         </Table.Row>
 
@@ -132,7 +132,7 @@ export class Campaign extends Component{
                                 Is beneficiary
                             </Table.Cell>
                             <Table.Cell singleLine>
-                                {this.state.campaign.isBeneficiary}
+                                {this.state.campaign.isBeneficiary.toString()}
                             </Table.Cell>
                         </Table.Row>
 
@@ -143,16 +143,25 @@ export class Campaign extends Component{
                             <Table.Cell singleLine>
                                 {this.state.campaign.state}
                             </Table.Cell>
+                        </Table.Row> 
+                    </Table.Body> 
+
+                    <Table.Footer fullWidth>
+                        <Table.Row>
+                            <Table.HeaderCell colSpan="2">
+                                {this.campaignInteractionSection()}
+                            </Table.HeaderCell>
                         </Table.Row>
-                    </Table.Body>
-                </Table> */}
+                    </Table.Footer>
+                </Table> 
 
             </div>
-        )
+        );
     }
 
     campaignInteractionSection(){
         if (this.state.campaign.campaignFinished){
+            console.log('finsihed:' + this.state.campaign.campaignFinished)
             return this.postCampaignInterface()
         }
         else {
@@ -198,7 +207,22 @@ export class Campaign extends Component{
         </div>
     }
 
-    onContribute(event) {
+    async onContribute(event) {
+        const accounts = await web3.eth.getAccounts();
+        const amount = web3.utils.toWei(this.state.contributionAmount, 'ether');
+
+        const contract = createContract(this.getCampaignAddress());
+        await contract.methods.contribute().send({
+            from:accounts[0],
+            value: amount
+        })
+
+        const campaign = this.state.campaign;
+        campaign.totalCollected = Number.parseFloat(campaign.totalCollected) + Number.parseFloat(amount);
+
+        this.setState({campaign : campaign});
+
         alert(`Contributing ${this.state.contributionAmount} to a contract`)
+
     }
 }
